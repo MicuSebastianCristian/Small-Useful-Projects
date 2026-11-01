@@ -123,6 +123,12 @@ def olx_listings():
             log(f"[olx] listing.listing keys={list(inner)[:30] if isinstance(inner, dict) else type(inner)}")
             log(f"[olx] links /d/oferta/ in html: {len(set(re.findall(r'/d/oferta/[a-z0-9-]+', html)))}")
             log(f"[olx] final url: {getattr(LAST, 'url', '?')}")
+            i = html.find('data-cy="l-card"')
+            log(f"[olx] card at {i}: " + re.sub(r"\s+", " ", html[i:i+3000]))
+            log(f"[olx] script ids: {re.findall(r'<script[^>]*id=\"([^\"]+)\"', html)[:20]}")
+            for kw in ("categoryId", "category_id", "cityId", "city_id", "regionId", "totalElements", "visibleTotalCount"):
+                j = html.find(kw)
+                log(f"[olx] {kw}@{j}: {html[max(0,j-80):j+120] if j>=0 else ''}")
         log(f"[olx] {city}: {len(ads)} anunturi in pagina")
         for ad in ads:
             area = None
