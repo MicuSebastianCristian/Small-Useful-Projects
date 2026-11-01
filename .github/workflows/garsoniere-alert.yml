@@ -5,6 +5,8 @@ on:
     # 09:34 ora Romaniei: 07:34 UTC iarna, 06:34 UTC vara (scriptul o pastreaza doar pe cea corecta)
     - cron: "34 7 * * *"
     - cron: "34 6 * * *"
+  push:
+    branches: [garsoniere-test]
   workflow_dispatch:
     inputs:
       debug:
@@ -18,6 +20,9 @@ permissions:
 concurrency:
   group: garsoniere
   cancel-in-progress: false
+
+env:
+  IS_DEBUG: ${{ inputs.debug == true || github.event_name == 'push' }}
 
 defaults:
   run:
@@ -41,13 +46,13 @@ jobs:
           # Topic-ul poate fi mutat intr-un secret NTFY_TOPIC (Settings > Secrets > Actions)
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC || 'garsoniere-bv-9e88aef5' }}
           SCHEDULE: ${{ github.event.schedule }}
-          DRY_RUN: ${{ inputs.debug && '1' || '0' }}
-          DEBUG_DIR: ${{ inputs.debug && 'debug' || '' }}
-          STATE_FILE: ${{ inputs.debug && 'seen-debug.json' || 'seen.json' }}
+          DRY_RUN: ${{ env.IS_DEBUG == 'true' && '1' || '0' }}
+          DEBUG_DIR: ${{ env.IS_DEBUG == 'true' && 'debug' || '' }}
+          STATE_FILE: ${{ env.IS_DEBUG == 'true' && 'seen-debug.json' || 'seen.json' }}
         run: python scraper.py
 
       - name: Salveaza HTML (debug)
-        if: ${{ inputs.debug }}
+        if: ${{ env.IS_DEBUG == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: debug-html
@@ -55,7 +60,7 @@ jobs:
           retention-days: 2
 
       - name: Salveaza anunturile vazute
-        if: ${{ !inputs.debug }}
+        if: ${{ env.IS_DEBUG != 'true' }}
         run: |
           if [ -n "$(git status --porcelain seen.json)" ]; then
             git config user.name "garsoniere-bot"
