@@ -1,0 +1,67 @@
+name: Garsoniere noi
+
+on:
+  schedule:
+    # 09:34 ora Romaniei: 07:34 UTC iarna, 06:34 UTC vara (scriptul o pastreaza doar pe cea corecta)
+    - cron: "34 7 * * *"
+    - cron: "34 6 * * *"
+  workflow_dispatch:
+    inputs:
+      debug:
+        description: "Test: fara notificari, salveaza HTML-ul paginilor"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: garsoniere
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: "5. Alerta Garsoniere ntfy"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install requests
+
+      - name: Cauta garsoniere
+        env:
+          # Topic-ul poate fi mutat intr-un secret NTFY_TOPIC (Settings > Secrets > Actions)
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC || 'garsoniere-bv-9e88aef5' }}
+          SCHEDULE: ${{ github.event.schedule }}
+          DRY_RUN: ${{ inputs.debug && '1' || '0' }}
+          DEBUG_DIR: ${{ inputs.debug && 'debug' || '' }}
+          STATE_FILE: ${{ inputs.debug && 'seen-debug.json' || 'seen.json' }}
+        run: python scraper.py
+
+      - name: Salveaza HTML (debug)
+        if: ${{ inputs.debug }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-html
+          path: "5. Alerta Garsoniere ntfy/debug/"
+          retention-days: 2
+
+      - name: Salveaza anunturile vazute
+        if: ${{ !inputs.debug }}
+        run: |
+          if [ -n "$(git status --porcelain seen.json)" ]; then
+            git config user.name "garsoniere-bot"
+            git config user.email "garsoniere-bot@users.noreply.github.com"
+            git add seen.json
+            git commit -m "Garsoniere: actualizare anunturi vazute"
+            git pull --rebase -q
+            git push
+          fi
