@@ -95,7 +95,24 @@ def price_eur(value, currency):
 OLX_CITIES = {"Brasov": "brasov", "Sanpetru": "sanpetru"}
 
 
+def olx_probe():
+    if not DEBUG_DIR:
+        return
+    for u in (
+        "https://www.olx.ro/api/v1/friendly-links/query-params/imobiliare,apartamente-garsoniere-de-vanzare,brasov",
+        "https://www.olx.ro/api/v1/friendly-links/query-params/imobiliare,apartamente-garsoniere-de-vanzare,sanpetru",
+        "https://www.olx.ro/api/v1/locations/autocomplete/?input=sanpetru",
+        "https://www.olx.ro/api/v1/offers/?offset=0&limit=3&query=garsoniera%20brasov&sort_by=created_at:desc",
+    ):
+        try:
+            r = SESSION.get(u, timeout=30, headers={"Accept": "application/json"})
+            log(f"[olx-probe] {u} -> {r.status_code}: " + re.sub(r"\s+", " ", r.text[:1500]))
+        except Exception as e:
+            log(f"[olx-probe] {u} -> {e}")
+
+
 def olx_listings():
+    olx_probe()
     out = []
     for city, slug in OLX_CITIES.items():
         url = (
