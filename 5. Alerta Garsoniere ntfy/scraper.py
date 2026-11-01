@@ -112,7 +112,6 @@ def olx_listings():
                 "https://www.olx.ro/api/v1/offers/?limit=50"
                 f"&offset={offset}&category_id=907&region_id=4&city_id={city_id}"
                 "&sort_by=created_at:desc&currency=EUR"
-                "&filter_enum_rooms%5B0%5D=one"
                 f"&filter_float_price:to={MAX_EUR}"
             )
             try:
@@ -122,7 +121,13 @@ def olx_listings():
                 break
             ads = data.get("data") or []
             log(f"[olx] {city} offset {offset}: {len(ads)} anunturi")
+            if DEBUG_DIR and ads and offset == 0:
+                log("[olx] params: " + json.dumps(ads[0].get("params"), ensure_ascii=False)[:1500])
+                log("[olx] location: " + json.dumps(ads[0].get("location"), ensure_ascii=False)[:500])
             for ad in ads:
+                rooms = olx_param(ad, "rooms").get("key")
+                if rooms and rooms != "one":
+                    continue  # pastram doar garsonierele (1 camera)
                 pr = olx_param(ad, "price")
                 area = olx_param(ad, "m")
                 loc = ad.get("location") or {}
@@ -324,7 +329,9 @@ def main():
         for i in items:
             log("[item]", json.dumps({k: i[k] for k in ("site", "area", "price_eur", "where", "title", "url")}, ensure_ascii=False))
     items = [i for i in items if ok(i)]
-    uniq = {i["id"]: i for i in items}
+    uniq = {}
+    for i in items:  # acelasi anunt poate aparea de doua ori
+        uniq.setdefault(i["url"].split("?")[0], i)
     items = sorted(uniq.values(), key=lambda i: -(i["area"] or 0))
     new = [i for i in items if i["id"] not in seen]
     log(f"Total valide: {len(items)}, noi: {len(new)}, surse fara rezultate: {errors}")
