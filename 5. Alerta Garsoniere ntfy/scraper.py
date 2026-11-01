@@ -246,7 +246,9 @@ def in_area(item):
     return "bra" in w or "sanpetru" in w or "sânpetru" in w
 
 
-EXCLUDE = re.compile(r"\b(boxa|boxă|parcare|garaj|spatiu comercial|spațiu comercial|regim hotelier|teren)\b", re.I)
+EXCLUDE = re.compile(
+    r"\b(boxa|boxă|parcare|garaj|spatiu comercial|spațiu comercial|regim hotelier|teren"
+    r"|[2-5]\s*camere|doua camere|două camere|trei camere)\b", re.I)
 
 
 def ok(item):
