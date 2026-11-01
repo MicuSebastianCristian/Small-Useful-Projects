@@ -91,79 +91,53 @@ def price_eur(value, currency):
 
 
 # ---------------------------------------------------------------- OLX
+# API-ul public folosit de site-ul OLX. category 907 = apartamente si garsoniere
+# de vanzare, region 4 = judetul Brasov; filtram pe 1 camera (garsoniera).
 
-OLX_CITIES = {"Brasov": "brasov", "Sanpetru": "sanpetru"}
+OLX_CITIES = {"Brasov": 26711, "Sanpetru": 28445}
 
 
-def olx_probe():
-    if not DEBUG_DIR:
-        return
-    for u in (
-        "https://www.olx.ro/api/v1/friendly-links/query-params/imobiliare,apartamente-garsoniere-de-vanzare,brasov",
-        "https://www.olx.ro/api/v1/friendly-links/query-params/imobiliare,apartamente-garsoniere-de-vanzare,sanpetru",
-        "https://www.olx.ro/api/v1/locations/autocomplete/?input=sanpetru",
-        "https://www.olx.ro/api/v1/offers/?offset=0&limit=3&query=garsoniera%20brasov&sort_by=created_at:desc",
-    ):
-        try:
-            r = SESSION.get(u, timeout=30, headers={"Accept": "application/json"})
-            log(f"[olx-probe] {u} -> {r.status_code}: " + re.sub(r"\s+", " ", r.text[:1500]))
-        except Exception as e:
-            log(f"[olx-probe] {u} -> {e}")
+def olx_param(ad, key):
+    for p in ad.get("params") or []:
+        if p.get("key") == key:
+            return p.get("value") or {}
+    return {}
 
 
 def olx_listings():
-    olx_probe()
     out = []
-    for city, slug in OLX_CITIES.items():
-        url = (
-            f"https://www.olx.ro/imobiliare/apartamente-garsoniere-de-vanzare/{slug}/"
-            "?currency=EUR&search%5Border%5D=created_at%3Adesc"
-            "&search%5Bfilter_enum_rooms%5D%5B0%5D=one"
-            f"&search%5Bfilter_float_price%3Ato%5D={MAX_EUR}"
-        )
-        try:
-            html = fetch(url, f"olx_{slug}")
-        except Exception as e:
-            log(f"[olx] eroare {city}: {e}")
-            continue
-        m = re.search(r'window\.__PRERENDERED_STATE__\s*=\s*("(?:[^"\\]|\\.)*")', html)
-        if not m:
-            log(f"[olx] {city}: nu am gasit __PRERENDERED_STATE__")
-            continue
-        state = json.loads(json.loads(m.group(1)))
-        ads = state.get("listing", {}).get("listing", {}).get("ads", [])
-        if DEBUG_DIR:
-            lst = state.get("listing", {})
-            log(f"[olx] keys={list(state)[:30]}")
-            log(f"[olx] listing keys={list(lst)[:30]}")
-            inner = lst.get("listing", {}) if isinstance(lst, dict) else {}
-            log(f"[olx] listing.listing keys={list(inner)[:30] if isinstance(inner, dict) else type(inner)}")
-            log(f"[olx] links /d/oferta/ in html: {len(set(re.findall(r'/d/oferta/[a-z0-9-]+', html)))}")
-            log(f"[olx] final url: {getattr(LAST, 'url', '?')}")
-            i = html.find('data-cy="l-card"')
-            log(f"[olx] card at {i}: " + re.sub(r"\s+", " ", html[i:i+3000]))
-            log(f"[olx] script ids: {re.findall(r'<script[^>]*id=\"([^\"]+)\"', html)[:20]}")
-            for kw in ("categoryId", "category_id", "cityId", "city_id", "regionId", "totalElements", "visibleTotalCount"):
-                j = html.find(kw)
-                log(f"[olx] {kw}@{j}: {html[max(0,j-80):j+120] if j>=0 else ''}")
-        log(f"[olx] {city}: {len(ads)} anunturi in pagina")
-        for ad in ads:
-            area = None
-            for p in ad.get("params", []):
-                if p.get("key") == "m" or "suprafata" in (p.get("name") or "").lower():
-                    area = to_float(p.get("normalizedValue") or p.get("value"))
-                    break
-            pr = (ad.get("price") or {}).get("regularPrice") or {}
-            loc = ad.get("location") or {}
-            out.append({
-                "id": f"olx:{ad.get('id')}",
-                "site": "OLX",
-                "title": ad.get("title", "").strip(),
-                "url": ad.get("url"),
-                "price_eur": price_eur(pr.get("value"), pr.get("currencyCode")),
-                "area": area,
-                "where": ", ".join(x for x in [loc.get("cityName"), loc.get("districtName")] if x) or city,
-            })
+    for city, city_id in OLX_CITIES.items():
+        for offset in (0, 50):
+            url = (
+                "https://www.olx.ro/api/v1/offers/?limit=50"
+                f"&offset={offset}&category_id=907&region_id=4&city_id={city_id}"
+                "&sort_by=created_at:desc&currency=EUR"
+                "&filter_enum_rooms%5B0%5D=one"
+                f"&filter_float_price:to={MAX_EUR}"
+            )
+            try:
+                data = json.loads(fetch(url, f"olx_{city}_{offset}"))
+            except Exception as e:
+                log(f"[olx] eroare {city}: {e}")
+                break
+            ads = data.get("data") or []
+            log(f"[olx] {city} offset {offset}: {len(ads)} anunturi")
+            for ad in ads:
+                pr = olx_param(ad, "price")
+                area = olx_param(ad, "m")
+                loc = ad.get("location") or {}
+                out.append({
+                    "id": f"olx:{ad.get('id')}",
+                    "site": "OLX",
+                    "title": (ad.get("title") or "").strip(),
+                    "url": ad.get("url"),
+                    "price_eur": price_eur(pr.get("value"), pr.get("currency")),
+                    "area": to_float(area.get("key") or area.get("label")),
+                    "where": ", ".join(x for x in [(loc.get("city") or {}).get("name"),
+                                                    (loc.get("district") or {}).get("name")] if x) or city,
+                })
+            if len(ads) < 50:
+                break
     return out
 
 
@@ -226,21 +200,7 @@ def walk(obj):
             yield from walk(v)
 
 
-def imobiliare_probe():
-    if not (DEBUG_DIR and cffi_requests):
-        return
-    for imp in ("safari17_0", "chrome131_android", "edge101"):
-        for u in ("https://www.imobiliare.ro/vanzare-garsoniere/brasov",
-                  "https://m.imobiliare.ro/vanzare-garsoniere/brasov"):
-            try:
-                r = cffi_requests.get(u, impersonate=imp, timeout=30)
-                log(f"[imob-probe] {imp} {u} -> {r.status_code} {len(r.text)}")
-            except Exception as e:
-                log(f"[imob-probe] {imp} {u} -> {e}")
-
-
 def imobiliare_listings():
-    imobiliare_probe()
     out = []
     for city, path in IMOB_LOCS.items():
         url = f"https://www.imobiliare.ro/vanzare-garsoniere/{path}?pret-max={MAX_EUR}&ordine=noi"
@@ -292,8 +252,13 @@ def in_area(item):
     return "bra" in w or "sanpetru" in w or "sânpetru" in w
 
 
+EXCLUDE = re.compile(r"\b(boxa|boxă|parcare|garaj|spatiu comercial|spațiu comercial|regim hotelier|teren)\b", re.I)
+
+
 def ok(item):
     if not item.get("url") or not item.get("id"):
+        return False
+    if EXCLUDE.search(item.get("title") or ""):
         return False
     p = item.get("price_eur")
     if p is not None and (p > MAX_EUR * 1.001 or p < MIN_EUR):
