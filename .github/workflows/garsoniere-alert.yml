@@ -15,6 +15,10 @@ on:
         description: "Test: fara notificari, salveaza HTML-ul paginilor"
         type: boolean
         default: false
+      lista_completa:
+        description: "Trimite toate garsonierele gasite (cu link), nu doar pe cele noi"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -48,6 +52,7 @@ jobs:
           # Topic-ul poate fi mutat intr-un secret NTFY_TOPIC (Settings > Secrets > Actions)
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC || 'garsoniere-bv-9e88aef5' }}
           SCHEDULE: ${{ github.event.schedule }}
+          FULL_LIST: ${{ inputs.lista_completa == true || contains(github.event.head_commit.message, '[lista]') }}
           DRY_RUN: ${{ env.IS_DEBUG == 'true' && '1' || '0' }}
           DEBUG_DIR: ${{ env.IS_DEBUG == 'true' && 'debug' || '' }}
           STATE_FILE: ${{ env.IS_DEBUG == 'true' && 'seen-debug.json' || 'seen.json' }}

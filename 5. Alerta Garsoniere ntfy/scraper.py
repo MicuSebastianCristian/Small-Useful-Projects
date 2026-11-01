@@ -29,6 +29,7 @@ NTFY_SERVER = os.environ.get("NTFY_SERVER", "https://ntfy.sh")
 STATE_FILE = Path(os.environ.get("STATE_FILE", "seen.json"))
 DEBUG_DIR = os.environ.get("DEBUG_DIR")  # daca e setat, salveaza HTML brut
 DRY_RUN = os.environ.get("DRY_RUN") == "1"
+FULL_LIST = os.environ.get("FULL_LIST") == "true"  # trimite toate anunturile, nu doar pe cele noi
 
 HEADERS = {
     "User-Agent": (
@@ -290,6 +291,27 @@ def ntfy(title, body, url=None, priority=3, tags="house"):
     time.sleep(1)
 
 
+def send_list(items, label, tags="clipboard"):
+    """Trimite toate anunturile ca liste, fiecare cu link-ul lui (impartite in mai multe notificari)."""
+    lines, fps = [], set()
+    for i in items:
+        if i["fp"] in fps:
+            continue
+        fps.add(i["fp"])
+        lines.append(f"{fmt_area(i['area'])} · {fmt_price(i['price_eur'])} · {i['where']} ({i['site']})\n{i['url'].split('?')[0]}")
+    chunks, cur = [], []
+    for ln in lines:
+        if cur and (len(cur) == 15 or len("\n\n".join(cur + [ln]).encode()) > 3500):
+            chunks.append(cur)
+            cur = []
+        cur.append(ln)
+    if cur:
+        chunks.append(cur)
+    for n, ch in enumerate(chunks, 1):
+        ntfy(f"{label} ({n}/{len(chunks)})", "\n\n".join(ch), tags=tags)
+    return len(lines)
+
+
 def should_run():
     """Cron-ul ruleaza la 06:34 si 07:34 UTC; pastram doar cel care e 09:34 la Brasov."""
     sched = os.environ.get("SCHEDULE", "")
@@ -339,24 +361,15 @@ def main():
         new.append(i)
     log(f"Total valide: {len(items)}, noi: {len(new)}, surse fara rezultate: {errors}")
 
-    if first_run:
-        top, tfp = [], set()
-        for i in items:
-            if i["fp"] not in tfp:
-                tfp.add(i["fp"]); top.append(i)
-            if len(top) == 5:
-                break
-        body = "\n".join(f"{fmt_area(i['area'])} · {fmt_price(i['price_eur'])} · {i['where']} ({i['site']})"
-                         for i in top)
-        ntfy(f"Monitorizare pornita: {len({i['fp'] for i in items})} garsoniere existente",
-             "Cele mai mari acum:\n" + body + "\n\nDe maine primesti doar anunturile noi.",
-             url=top[0]["url"] if top else None, tags="white_check_mark")
-    else:
-        for i in new[:25]:
+    total = len({i["fp"] for i in items})
+    if first_run or FULL_LIST:
+        send_list(items, f"{total} garsoniere, sortate dupa mp")
+    elif new:
+        for i in new[:10]:
             ntfy(f"{fmt_area(i['area'])} · {fmt_price(i['price_eur'])} · {i['where']}",
                  f"{i['title']}\n{i['site']}: {i['url']}", url=i["url"], priority=4)
-        if len(new) > 25:
-            ntfy(f"+{len(new) - 25} garsoniere noi", "Prea multe pentru notificari individuale; verifica site-urile.")
+        if len(new) > 10:
+            send_list(new[10:], f"Inca {len(new) - 10} garsoniere noi")
 
     if errors and len(errors) == 3:
         ntfy("Alerta garsoniere: nicio sursa nu a raspuns", "Verifica GitHub Actions.", tags="warning")
