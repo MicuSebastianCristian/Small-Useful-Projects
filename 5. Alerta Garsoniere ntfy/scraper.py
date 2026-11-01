@@ -46,6 +46,13 @@ else:
     SESSION.headers.update(HEADERS)
 
 
+class _Last:
+    url = ""
+
+
+LAST = _Last()
+
+
 def log(*a):
     print(*a, flush=True)
 
@@ -59,6 +66,7 @@ def fetch(url, tag):
         (Path(DEBUG_DIR) / f"{safe}.html").write_text(r.text, encoding="utf-8")
         if r.status_code >= 400:
             log(f"[{tag}] body: {re.sub(r'\s+', ' ', r.text[:400])}")
+    LAST.url = str(r.url)
     r.raise_for_status()
     return r.text
 
@@ -107,6 +115,14 @@ def olx_listings():
             continue
         state = json.loads(json.loads(m.group(1)))
         ads = state.get("listing", {}).get("listing", {}).get("ads", [])
+        if DEBUG_DIR:
+            lst = state.get("listing", {})
+            log(f"[olx] keys={list(state)[:30]}")
+            log(f"[olx] listing keys={list(lst)[:30]}")
+            inner = lst.get("listing", {}) if isinstance(lst, dict) else {}
+            log(f"[olx] listing.listing keys={list(inner)[:30] if isinstance(inner, dict) else type(inner)}")
+            log(f"[olx] links /d/oferta/ in html: {len(set(re.findall(r'/d/oferta/[a-z0-9-]+', html)))}")
+            log(f"[olx] final url: {getattr(LAST, 'url', '?')}")
         log(f"[olx] {city}: {len(ads)} anunturi in pagina")
         for ad in ads:
             area = None
@@ -187,7 +203,21 @@ def walk(obj):
             yield from walk(v)
 
 
+def imobiliare_probe():
+    if not (DEBUG_DIR and cffi_requests):
+        return
+    for imp in ("safari17_0", "chrome131_android", "edge101"):
+        for u in ("https://www.imobiliare.ro/vanzare-garsoniere/brasov",
+                  "https://m.imobiliare.ro/vanzare-garsoniere/brasov"):
+            try:
+                r = cffi_requests.get(u, impersonate=imp, timeout=30)
+                log(f"[imob-probe] {imp} {u} -> {r.status_code} {len(r.text)}")
+            except Exception as e:
+                log(f"[imob-probe] {imp} {u} -> {e}")
+
+
 def imobiliare_listings():
+    imobiliare_probe()
     out = []
     for city, path in IMOB_LOCS.items():
         url = f"https://www.imobiliare.ro/vanzare-garsoniere/{path}?pret-max={MAX_EUR}&ordine=noi"
