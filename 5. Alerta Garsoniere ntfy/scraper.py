@@ -16,7 +16,13 @@ from zoneinfo import ZoneInfo
 
 import requests
 
+try:  # imita amprenta TLS a unui Chrome real (OLX/Imobiliare blocheaza clientii simpli)
+    from curl_cffi import requests as cffi_requests
+except ImportError:
+    cffi_requests = None
+
 MAX_EUR = 55000
+MIN_EUR = 10000  # sub asta e aproape sigur pret de inchiriere sau eroare
 EUR_RON = float(os.environ.get("EUR_RON", "5.1"))
 NTFY_TOPIC = os.environ.get("NTFY_TOPIC", "")
 NTFY_SERVER = os.environ.get("NTFY_SERVER", "https://ntfy.sh")
@@ -33,8 +39,11 @@ HEADERS = {
     "Accept-Language": "ro-RO,ro;q=0.9,en;q=0.8",
 }
 
-SESSION = requests.Session()
-SESSION.headers.update(HEADERS)
+if cffi_requests:
+    SESSION = cffi_requests.Session(impersonate="chrome")
+else:
+    SESSION = requests.Session()
+    SESSION.headers.update(HEADERS)
 
 
 def log(*a):
@@ -48,6 +57,8 @@ def fetch(url, tag):
         Path(DEBUG_DIR).mkdir(parents=True, exist_ok=True)
         safe = re.sub(r"[^a-z0-9]+", "_", tag.lower())
         (Path(DEBUG_DIR) / f"{safe}.html").write_text(r.text, encoding="utf-8")
+        if r.status_code >= 400:
+            log(f"[{tag}] body: {re.sub(r'\s+', ' ', r.text[:400])}")
     r.raise_for_status()
     return r.text
 
@@ -232,7 +243,7 @@ def ok(item):
     if not item.get("url") or not item.get("id"):
         return False
     p = item.get("price_eur")
-    if p is not None and p > MAX_EUR * 1.001:
+    if p is not None and (p > MAX_EUR * 1.001 or p < MIN_EUR):
         return False
     return in_area(item)
 
@@ -291,6 +302,9 @@ def main():
             log(f"[{name}] eroare: {e}")
             errors.append(name)
 
+    if DEBUG_DIR:
+        for i in items:
+            log("[item]", json.dumps({k: i[k] for k in ("site", "area", "price_eur", "where", "title", "url")}, ensure_ascii=False))
     items = [i for i in items if ok(i)]
     uniq = {i["id"]: i for i in items}
     items = sorted(uniq.values(), key=lambda i: -(i["area"] or 0))

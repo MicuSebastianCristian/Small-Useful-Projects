@@ -39,7 +39,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - run: pip install requests
+      - run: pip install requests curl_cffi
 
       - name: Cauta garsoniere
         env:
