@@ -46,13 +46,6 @@ else:
     SESSION.headers.update(HEADERS)
 
 
-class _Last:
-    url = ""
-
-
-LAST = _Last()
-
-
 def log(*a):
     print(*a, flush=True)
 
@@ -66,7 +59,6 @@ def fetch(url, tag):
         (Path(DEBUG_DIR) / f"{safe}.html").write_text(r.text, encoding="utf-8")
         if r.status_code >= 400:
             log(f"[{tag}] body: {re.sub(r'\s+', ' ', r.text[:400])}")
-    LAST.url = str(r.url)
     r.raise_for_status()
     return r.text
 
@@ -121,9 +113,6 @@ def olx_listings():
                 break
             ads = data.get("data") or []
             log(f"[olx] {city} offset {offset}: {len(ads)} anunturi")
-            if DEBUG_DIR and ads and offset == 0:
-                log("[olx] params: " + json.dumps(ads[0].get("params"), ensure_ascii=False)[:1500])
-                log("[olx] location: " + json.dumps(ads[0].get("location"), ensure_ascii=False)[:500])
             for ad in ads:
                 rooms = olx_param(ad, "rooms").get("key")
                 if rooms and rooms != "one":
@@ -271,6 +260,12 @@ def ok(item):
     return in_area(item)
 
 
+def fingerprint(i):
+    """Acelasi anunt postat de aceeasi agentie pe OLX si Storia: titlu + mp + pret."""
+    t = re.sub(r"[^a-z0-9]", "", (i.get("title") or "").lower())[:40]
+    return f"fp:{t}|{round(i.get('area') or 0)}|{round(i.get('price_eur') or 0)}"
+
+
 def fmt_price(p):
     return "pret ?" if p is None else f"{p:,.0f}€".replace(",", ".")
 
@@ -330,17 +325,28 @@ def main():
             log("[item]", json.dumps({k: i[k] for k in ("site", "area", "price_eur", "where", "title", "url")}, ensure_ascii=False))
     items = [i for i in items if ok(i)]
     uniq = {}
-    for i in items:  # acelasi anunt poate aparea de doua ori
+    for i in items:  # acelasi anunt poate aparea de doua ori sau pe mai multe site-uri
+        i["fp"] = fingerprint(i)
         uniq.setdefault(i["url"].split("?")[0], i)
     items = sorted(uniq.values(), key=lambda i: -(i["area"] or 0))
-    new = [i for i in items if i["id"] not in seen]
+    new, fps = [], set()
+    for i in items:
+        if i["id"] in seen or i["fp"] in seen or i["fp"] in fps:
+            continue
+        fps.add(i["fp"])
+        new.append(i)
     log(f"Total valide: {len(items)}, noi: {len(new)}, surse fara rezultate: {errors}")
 
     if first_run:
-        top = items[:5]
+        top, tfp = [], set()
+        for i in items:
+            if i["fp"] not in tfp:
+                tfp.add(i["fp"]); top.append(i)
+            if len(top) == 5:
+                break
         body = "\n".join(f"{fmt_area(i['area'])} · {fmt_price(i['price_eur'])} · {i['where']} ({i['site']})"
                          for i in top)
-        ntfy(f"Monitorizare pornita: {len(items)} garsoniere existente",
+        ntfy(f"Monitorizare pornita: {len({i['fp'] for i in items})} garsoniere existente",
              "Cele mai mari acum:\n" + body + "\n\nDe maine primesti doar anunturile noi.",
              url=top[0]["url"] if top else None, tags="white_check_mark")
     else:
@@ -353,7 +359,7 @@ def main():
     if errors and len(errors) == 3:
         ntfy("Alerta garsoniere: nicio sursa nu a raspuns", "Verifica GitHub Actions.", tags="warning")
 
-    seen |= {i["id"] for i in items}
+    seen |= {i["id"] for i in items} | {i["fp"] for i in items}
     state = {"seen": sorted(seen), "last_run": datetime.now(timezone.utc).isoformat(timespec="seconds")}
     STATE_FILE.write_text(json.dumps(state, indent=1, ensure_ascii=False))
     return 0

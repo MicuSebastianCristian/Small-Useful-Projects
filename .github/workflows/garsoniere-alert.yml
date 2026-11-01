@@ -6,7 +6,9 @@ on:
     - cron: "34 7 * * *"
     - cron: "34 6 * * *"
   push:
-    branches: [garsoniere-test]
+    # o modificare a scriptului porneste imediat o verificare
+    branches: [main]
+    paths: ["5. Alerta Garsoniere ntfy/scraper.py"]
   workflow_dispatch:
     inputs:
       debug:
@@ -22,7 +24,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  IS_DEBUG: ${{ inputs.debug == true || github.event_name == 'push' }}
+  IS_DEBUG: ${{ inputs.debug == true }}
 
 defaults:
   run:
