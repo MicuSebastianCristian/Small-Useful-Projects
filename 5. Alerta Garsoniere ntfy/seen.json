@@ -39,6 +39,7 @@
   "fp:garsonier20mpcompletmobilatiutilatetaj1r|20|45000",
   "fp:garsonier22mpbaieibuctrieproprietractoru|22|39999",
   "fp:garsonier24mpetaj34bartolomeubraov|24|42500",
+  "fp:garsoniera21mpastra|21|44900",
   "fp:garsoniera21mpcucreditipotecar|21|41400",
   "fp:garsoniera23mpcentralapropriezonatractor|23|52000",
   "fp:garsoniera24mpcentral|24|55000",
@@ -52,6 +53,7 @@
   "fp:garsonieracraiterstrfanionului26mp|26|46900",
   "fp:garsonieracubaieproprie12mprenovatazonaa|12|25500",
   "fp:garsonieradecomandata26mp|26|52500",
+  "fp:garsonieradecomandatazonanoua|32|52999",
   "fp:garsonieradecomandatazonanoua|32|54999",
   "fp:garsonieradevanzare20mpfundaturaharmanul|19|41990",
   "fp:garsonieradevanzare20mpzonanoua|20|50000",
@@ -198,6 +200,7 @@
   "olx:309992556",
   "olx:310199154",
   "olx:310202277",
+  "olx:310250474",
   "olx:310467191",
   "olx:310484709",
   "olx:310499913",
@@ -259,6 +262,7 @@
   "olx:311529731",
   "olx:311551032",
   "olx:311566968",
+  "olx:311598258",
   "storia:10067191",
   "storia:10454891",
   "storia:10462588",
@@ -341,7 +345,8 @@
   "storia:10748895",
   "storia:10751430",
   "storia:10755607",
-  "storia:10757346"
+  "storia:10757346",
+  "storia:10759282"
  ],
- "last_run": "2026-11-05T15:41:28+00:00"
+ "last_run": "2026-11-06T15:16:38+00:00"
 }
