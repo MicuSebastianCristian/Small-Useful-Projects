@@ -12,6 +12,7 @@
   "fp:cameradecaminbaieproprie13mpmobilatautil|13|26500",
   "fp:cameradecamincompletutilatasimobilatazon|21|42900",
   "fp:cameradecamincubaiepropriemobilatazonage|10|27000",
+  "fp:cameradecamincubaiesibucatarie19mpbrasov|19|36500",
   "fp:cameradecamincubaiesibucatariemobilataut|24|44000",
   "fp:cameradecamincubaiesibucatarieproprie|20|37500",
   "fp:cameradecamindevanzarezonatractorul|10|16000",
@@ -124,6 +125,7 @@
   "fp:vandcameracaminbartolomeu|22|33600",
   "fp:vandcameracaminstrlmiei|10|21000",
   "fp:vandcameradecamin12mpbaiecomunagemeniipo|12|19000",
+  "fp:vandcameradecamincubaieproprieincartieru|12|35500",
   "fp:vandcameradecamin|10|21000",
   "fp:vandgarsonieracameradecaminaleeaconstruc|20|42000",
   "fp:vandgarsonieracartiertractorulpealeeacon|24|44950",
@@ -136,6 +138,7 @@
   "fp:vndcameradecmininbartolomeu|22|33500",
   "fp:vndcameradecmin|20|25500",
   "fp:vndcamerdecamin|10|24500",
+  "fp:vndgarsoniera24mpzonaastra|24|45500",
   "fp:vndgarsoniernbraovtractorulzonacoresi460|23|46000",
   "fp:vndgarsoniernzoncentralbraov|25|45000",
   "fp:vnzaregarsonierbraovdirectproprietar|24|39900",
@@ -146,6 +149,7 @@
   "olx:294585133",
   "olx:297270359",
   "olx:297270407",
+  "olx:298048084",
   "olx:300820853",
   "olx:302914051",
   "olx:303180737",
@@ -153,8 +157,10 @@
   "olx:303182423",
   "olx:303531457",
   "olx:303592301",
+  "olx:303869173",
   "olx:303935130",
   "olx:303989458",
+  "olx:303990250",
   "olx:304228875",
   "olx:304386729",
   "olx:304447078",
@@ -348,5 +354,5 @@
   "storia:10757346",
   "storia:10759282"
  ],
- "last_run": "2026-11-07T14:16:52+00:00"
+ "last_run": "2026-11-08T14:24:44+00:00"
 }
