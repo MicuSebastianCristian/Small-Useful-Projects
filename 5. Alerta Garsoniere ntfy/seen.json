@@ -2,6 +2,7 @@
  "seen": [
   "fp:apartament2cameresuedia|58|25000",
   "fp:astrametromcameracugrupsanitar|10|23500",
+  "fp:braovvnd1camera15mp|15|27000",
   "fp:braovvnd1camera15mp|15|35000",
   "fp:cameracamincubaieproprie12mpzonatractoru|12|26500",
   "fp:cameracaminfloriloraleeavioletelorbaiesi|10|18400",
@@ -97,6 +98,7 @@
   "fp:garsonieratractorulbaieproprie|20|35000",
   "fp:garsonieratractorulrenovatalangapiata|24|41000",
   "fp:garsonierauzina2|24|45000",
+  "fp:garsonierazonaastra|20|40000",
   "fp:garsonierazonabartolomeulaniicentralater|26|42500",
   "fp:garsonierazonacentrala|24|45000",
   "fp:garsonierazonajudeean|25|43700",
@@ -121,6 +123,7 @@
   "fp:inchiriezvandcamerabrasov|10|16000",
   "fp:inchiriezvandcamerabrasov|10|17000",
   "fp:iofertaigarsonieradevanzarei20mpigeneral|21|40000",
+  "fp:ofersprevinzarecameracamininastra|10|20500",
   "fp:oportunitate21mpcucentralaproprienoua|21|36500",
   "fp:oportunitatedevanzare2cameredecaminpeace|26|36500",
   "fp:oportunitategarsonieraconf2inactecumulti|25|47000",
@@ -279,6 +282,8 @@
   "olx:311731301",
   "olx:311756462",
   "olx:311762561",
+  "olx:311787834",
+  "olx:311788069",
   "storia:10067191",
   "storia:10454891",
   "storia:10462588",
@@ -323,6 +328,7 @@
   "storia:10688781",
   "storia:10689620",
   "storia:10689738",
+  "storia:10691522",
   "storia:10695454",
   "storia:10697489",
   "storia:10698719",
@@ -363,7 +369,10 @@
   "storia:10755607",
   "storia:10757346",
   "storia:10759282",
-  "storia:10765205"
+  "storia:10765205",
+  "storia:10766846",
+  "storia:10766873",
+  "storia:10768562"
  ],
- "last_run": "2026-11-09T17:43:34+00:00"
+ "last_run": "2026-11-10T15:42:35+00:00"
 }
