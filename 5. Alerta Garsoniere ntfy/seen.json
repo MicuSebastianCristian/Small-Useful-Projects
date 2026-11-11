@@ -39,6 +39,7 @@
   "fp:devanzarecameracamin960mp19800euro|10|19800",
   "fp:devanzarecameradecamincartiernoua|22|55000",
   "fp:devanzaregarsonieracentral|24|55000",
+  "fp:devanzaregarsonieraconfort2|0|52800",
   "fp:exclusivitategarsonier22mptractorulveder|22|42500",
   "fp:garsonier20mpcompletmobilatiutilatetaj1r|20|45000",
   "fp:garsonier22mpbaieibuctrieproprietractoru|22|39999",
@@ -93,6 +94,7 @@
   "fp:garsonierarenovatainastrabrasov|23|45000",
   "fp:garsonierasanpetruresidence|36|16667",
   "fp:garsonierasemidecomandata23mpzonatractor|24|45000",
+  "fp:garsonierasemidecomandatacameramobilatau|22|44900",
   "fp:garsonierasemidecomandatacameramobilatau|24|45000",
   "fp:garsonieratractorul5mindepiata|21|38000",
   "fp:garsonieratractorulbaieproprie|20|35000",
@@ -133,9 +135,11 @@
   "fp:vandcameracaminbartolomeu|22|33600",
   "fp:vandcameracaminstrlmiei|10|21000",
   "fp:vandcameradecamin12mpbaiecomunagemeniipo|12|19000",
+  "fp:vandcameradecaminbrasovzonagemenii12mpco|0|22000",
   "fp:vandcameradecamincubaieproprieincartieru|12|35500",
   "fp:vandcameradecamin|10|21000",
   "fp:vandgarsonieracameradecaminaleeaconstruc|20|42000",
+  "fp:vandgarsonieracartiertractorulpealeeacon|24|44850",
   "fp:vandgarsonieracartiertractorulpealeeacon|24|44950",
   "fp:vandgarsonieragatademutat|21|45000",
   "fp:vandgasornieraurgentnuzina2|21|40000",
@@ -284,6 +288,10 @@
   "olx:311762561",
   "olx:311787834",
   "olx:311788069",
+  "olx:311810913",
+  "olx:311836877",
+  "olx:311841661",
+  "olx:311841811",
   "storia:10067191",
   "storia:10454891",
   "storia:10462588",
@@ -372,7 +380,9 @@
   "storia:10765205",
   "storia:10766846",
   "storia:10766873",
-  "storia:10768562"
+  "storia:10768562",
+  "storia:10771899",
+  "storia:10771915"
  ],
- "last_run": "2026-11-10T15:42:35+00:00"
+ "last_run": "2026-11-11T15:30:16+00:00"
 }
