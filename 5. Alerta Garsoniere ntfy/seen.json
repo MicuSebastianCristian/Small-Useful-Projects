@@ -4,7 +4,9 @@
   "fp:astrametromcameracugrupsanitar|10|23500",
   "fp:braovvnd1camera15mp|15|27000",
   "fp:braovvnd1camera15mp|15|35000",
+  "fp:camera10metripatrati|10|18000",
   "fp:cameracamincubaieproprie12mpzonatractoru|12|26500",
+  "fp:cameracamincubaiezonastefancelmare|14|35000",
   "fp:cameracaminfloriloraleeavioletelorbaiesi|10|18400",
   "fp:cameracubaie128mastrapiata|13|26500",
   "fp:cameracubaie12mrenovatmobilatutilatastra|12|26500",
@@ -110,6 +112,7 @@
   "fp:garsonierazonacentrala|24|45000",
   "fp:garsonierazonajudeean|25|43700",
   "fp:garsonierazonanouaetajintermediar|20|45000",
+  "fp:garsonierazonatractorulkaufland|22|52800",
   "fp:garsonierazonatractorul|21|39900",
   "fp:garsonierbalconibecimobilatiutilat|29|54990",
   "fp:garsoniercubalconrenovatanbraov|30|51900",
@@ -308,6 +311,17 @@
   "olx:311879223",
   "olx:311922354",
   "storia:10067191",
+  "storia:10319770",
+  "storia:10331550",
+  "storia:10342431",
+  "storia:10347262",
+  "storia:10350874",
+  "storia:10398814",
+  "storia:10409924",
+  "storia:10413874",
+  "storia:10429354",
+  "storia:10429365",
+  "storia:10451802",
   "storia:10454891",
   "storia:10462588",
   "storia:10468072",
@@ -403,7 +417,8 @@
   "storia:10773620",
   "storia:10774766",
   "storia:10775607",
-  "storia:10778236"
+  "storia:10778236",
+  "storia:10780180"
  ],
- "last_run": "2026-11-13T15:34:54+00:00"
+ "last_run": "2026-11-14T14:23:48+00:00"
 }
