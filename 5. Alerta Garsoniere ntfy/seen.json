@@ -15,6 +15,7 @@
   "fp:cameracuspatiusuplimentaramenajattractor|20|32900",
   "fp:cameradecamin10mpzonaflorilor|10|21000",
   "fp:cameradecaminbaieproprie13mpmobilatautil|13|26500",
+  "fp:cameradecamincompletutilatasimobilatazon|20|42900",
   "fp:cameradecamincompletutilatasimobilatazon|21|42900",
   "fp:cameradecamincubaiepropriemobilatazonage|10|27000",
   "fp:cameradecamincubaiesibucatarie19mpbrasov|19|36500",
@@ -310,7 +311,10 @@
   "olx:311871999",
   "olx:311879223",
   "olx:311922354",
+  "olx:311968843",
   "storia:10067191",
+  "storia:10311936",
+  "storia:10315223",
   "storia:10319770",
   "storia:10331550",
   "storia:10342431",
@@ -418,7 +422,8 @@
   "storia:10774766",
   "storia:10775607",
   "storia:10778236",
-  "storia:10780180"
+  "storia:10780180",
+  "storia:10780454"
  ],
- "last_run": "2026-11-14T14:23:48+00:00"
+ "last_run": "2026-11-15T14:54:46+00:00"
 }
