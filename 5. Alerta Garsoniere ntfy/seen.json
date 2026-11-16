@@ -48,6 +48,7 @@
   "fp:devanzaregarsonieraconfort2|0|52800",
   "fp:exclusivitategarsonier22mptractorulveder|22|42500",
   "fp:garsonier20mpcompletmobilatiutilatetaj1r|20|45000",
+  "fp:garsonier21mpcompletmobilatiutilatetaj1r|21|45000",
   "fp:garsonier22mpbaieibuctrieproprietractoru|22|39999",
   "fp:garsonier24mpetaj34bartolomeubraov|24|42500",
   "fp:garsoniera21mpastra|21|44900",
@@ -68,6 +69,7 @@
   "fp:garsonieradecomandatazonanoua|32|52999",
   "fp:garsonieradecomandatazonanoua|32|54999",
   "fp:garsonieradevanzare20mpfundaturaharmanul|19|41990",
+  "fp:garsonieradevanzare20mpzonanoua|20|49900",
   "fp:garsonieradevanzare20mpzonanoua|20|50000",
   "fp:garsonieradevanzare20mpzonatractoru|20|43000",
   "fp:garsonieradevanzare22mprenovatamobilataz|22|47000",
@@ -107,6 +109,8 @@
   "fp:garsonieratractorul5mindepiata|21|38000",
   "fp:garsonieratractorulbaieproprie|20|35000",
   "fp:garsonieratractorulrenovatalangapiata|24|41000",
+  "fp:garsonierauzina2etajintermediarbrasov|22|44900",
+  "fp:garsonierauzina2|24|44500",
   "fp:garsonierauzina2|24|45000",
   "fp:garsonierazonaastra|20|40000",
   "fp:garsonierazonabartolomeulaniicentralater|26|42500",
@@ -312,6 +316,8 @@
   "olx:311879223",
   "olx:311922354",
   "olx:311968843",
+  "olx:312025758",
+  "olx:312028629",
   "storia:10067191",
   "storia:10311936",
   "storia:10315223",
@@ -423,7 +429,9 @@
   "storia:10775607",
   "storia:10778236",
   "storia:10780180",
-  "storia:10780454"
+  "storia:10780454",
+  "storia:10784250",
+  "storia:10784666"
  ],
- "last_run": "2026-11-15T14:54:46+00:00"
+ "last_run": "2026-11-16T17:16:24+00:00"
 }
