@@ -78,6 +78,7 @@
   "fp:garsonieradevanzare22mprenovatamobilataz|22|47000",
   "fp:garsonieradevanzare2305mpzonatractorul|23|46000",
   "fp:garsonieradevanzare24mpzonabartolomeu|24|47000",
+  "fp:garsonieradevanzare24mpzonaest|24|44500",
   "fp:garsonieradevanzare27mpzonabartolomeu|27|51900",
   "fp:garsonieradevanzare30mpstrvisinuluicarti|31|53500",
   "fp:garsonieradevanzare30mpstrvisinuluicarti|31|53900",
@@ -128,6 +129,7 @@
   "fp:garsonierbalconibecimobilatiutilat|29|54990",
   "fp:garsoniercubalconrenovatanbraov|30|51900",
   "fp:garsonierdecomandat32mpnouaparternaltmob|32|53900",
+  "fp:garsonierdevnzareastra24mplngpiaaastra|22|44900",
   "fp:garsonierdevnzareastra24mplngpiaaastra|24|44900",
   "fp:garsonierdevnzarennouadrstebraov|24|37800",
   "fp:garsonierdevnzaretractorulbraovvisavisde|32|55000",
@@ -152,6 +154,7 @@
   "fp:repozitionarecameradecaminintractorulviz|12|21500",
   "fp:totulnougarsoniera13mpzonalidl|12|30000",
   "fp:totulnougarsoniera13mpzonalidl|13|30000",
+  "fp:v226ndcamer259mobilat259537iutilat259cud|9|22500",
   "fp:vandapartamentcu2cameretransformatdingar|32|54000",
   "fp:vandcameracaminbartolomeu|22|33600",
   "fp:vandcameracaminstrlmiei|10|21000",
@@ -334,6 +337,8 @@
   "olx:312060398",
   "olx:312069802",
   "olx:312070115",
+  "olx:312089554",
+  "olx:312105407",
   "storia:10067191",
   "storia:10311936",
   "storia:10315223",
@@ -454,7 +459,9 @@
   "storia:10786996",
   "storia:10787711",
   "storia:10788952",
-  "storia:10789003"
+  "storia:10789003",
+  "storia:10790424",
+  "storia:10792517"
  ],
- "last_run": "2026-11-17T16:59:36+00:00"
+ "last_run": "2026-11-18T16:39:06+00:00"
 }
