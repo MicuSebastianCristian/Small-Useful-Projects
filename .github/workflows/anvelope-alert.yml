@@ -1,0 +1,68 @@
+name: Anvelope iarna 225/50 R17
+
+on:
+  schedule:
+    # din ora in ora; scriptul sare peste orele 23:00 - 06:59 (ora Romaniei)
+    - cron: "17 * * * *"
+  push:
+    branches: [main]
+    paths: ["6. Alerta Anvelope ntfy/scraper.py"]
+  workflow_dispatch:
+    inputs:
+      debug:
+        description: "Test: fara notificari, afiseaza ce a gasit"
+        type: boolean
+        default: false
+      lista_completa:
+        description: "Trimite toate anunturile potrivite (cu link), nu doar pe cele noi"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: anvelope
+  cancel-in-progress: false
+
+env:
+  IS_DEBUG: ${{ inputs.debug == true }}
+
+defaults:
+  run:
+    working-directory: "6. Alerta Anvelope ntfy"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install requests curl_cffi
+
+      - name: Cauta anvelope
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC_ANVELOPE || 'anvelope-bv-7c41d2e9' }}
+          SCHEDULE: ${{ github.event.schedule }}
+          FULL_LIST: ${{ inputs.lista_completa == true || contains(github.event.head_commit.message, '[lista]') }}
+          DRY_RUN: ${{ env.IS_DEBUG == 'true' && '1' || '0' }}
+          VERBOSE: ${{ env.IS_DEBUG == 'true' && '1' || '0' }}
+          STATE_FILE: ${{ env.IS_DEBUG == 'true' && 'seen-debug.json' || 'seen.json' }}
+        run: python scraper.py
+
+      - name: Salveaza anunturile vazute
+        if: ${{ env.IS_DEBUG != 'true' }}
+        run: |
+          if [ -n "$(git status --porcelain seen.json)" ]; then
+            git config user.name "anvelope-bot"
+            git config user.email "anvelope-bot@users.noreply.github.com"
+            git add seen.json
+            git commit -m "Anvelope: actualizare anunturi vazute"
+            git pull --rebase -q
+            git push
+          fi
