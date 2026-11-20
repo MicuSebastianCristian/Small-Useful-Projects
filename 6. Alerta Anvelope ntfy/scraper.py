@@ -186,7 +186,7 @@ def details(i):
     if i["year"]:
         bits.append(f"DOT {i['year']}")
     if i["tread"]:
-        bits.append(f"{i['tread']} mm")
+        bits.append(re.sub(r"\s*mm$", "", i["tread"]) + " mm")
     return " · ".join(bits)
 
 
