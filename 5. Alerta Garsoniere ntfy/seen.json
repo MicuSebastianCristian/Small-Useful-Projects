@@ -167,6 +167,7 @@
   "fp:vandcameradecaminbrasovzonagemenii12mpco|0|22000",
   "fp:vandcameradecamincubaieproprieincartieru|12|35500",
   "fp:vandcameradecamin|10|21000",
+  "fp:vandgarsonieracameradecaminaleeaconstruc|20|40500",
   "fp:vandgarsonieracameradecaminaleeaconstruc|20|42000",
   "fp:vandgarsonieracartiertractorulpealeeacon|24|44850",
   "fp:vandgarsonieracartiertractorulpealeeacon|24|44950",
@@ -476,5 +477,5 @@
   "storia:10796961",
   "storia:10799051"
  ],
- "last_run": "2026-11-21T15:30:10+00:00"
+ "last_run": "2026-11-22T15:32:16+00:00"
 }
